@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "type": "docker",
+  "features": {
+    "cloud": "v1"
+  },
+  "env": {
+    "REDDIT_CLIENT_ID": "@reddit_client_id",
+    "REDDIT_CLIENT_SECRET": "@reddit_client_secret",
+    "PORT": "8080"
+  }
+}
