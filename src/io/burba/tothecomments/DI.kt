@@ -4,6 +4,7 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import io.burba.tothecomments.command.FetchPostsCommand
+import io.burba.tothecomments.http.PostsApi
 import io.burba.tothecomments.logging.HttpLoggingInterceptor
 import io.burba.tothecomments.source.meta.MicrolinkApi
 import io.burba.tothecomments.source.meta.MicrolinkMetaSource
@@ -22,7 +23,7 @@ import java.util.UUID
 import kotlin.LazyThreadSafetyMode.PUBLICATION
 
 class DI(private val config: Config) {
-    val commands = Commands()
+    val apis = Apis()
 
     val moshi: Moshi by lazy(PUBLICATION) {
         Moshi.Builder()
@@ -72,9 +73,10 @@ class DI(private val config: Config) {
     }
 
     private val postSources by lazy(PUBLICATION) { listOf(redditSource, hnSource) }
+    private val fetchPostsCommand by lazy(PUBLICATION) { FetchPostsCommand(microLinkSource, postSources) }
 
-    inner class Commands {
-        val fetchPosts by lazy(PUBLICATION) { FetchPostsCommand(microLinkSource, postSources) }
+    inner class Apis {
+        val posts by lazy(PUBLICATION) { PostsApi(fetchPostsCommand) }
     }
 }
 

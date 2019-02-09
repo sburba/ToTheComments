@@ -3,7 +3,6 @@ package io.burba.tothecomments.http
 import com.ryanharter.ktor.moshi.moshi
 import io.burba.tothecomments.Config
 import io.burba.tothecomments.DI
-import io.burba.tothecomments.command.InvalidUrlException
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -27,9 +26,9 @@ import io.ktor.server.netty.Netty
 import org.slf4j.event.Level
 import java.util.UUID
 
-val config = Config()
-val deps = DI(config)
-val commands = deps.commands
+private val config = Config()
+private val deps = DI(config)
+private val apis = deps.apis
 
 fun main() {
     embeddedServer(
@@ -66,18 +65,7 @@ fun Application.module() {
     }
 
     routing {
-        get("/posts/{url}") {
-            // "url" is guaranteed to be there, because of the route
-            val url = call.parameters["url"]!!
-            try {
-                call.respond(commands.fetchPosts.run(url))
-            } catch (e: InvalidUrlException) {
-                call.respond(
-                    HttpStatusCode.BadRequest,
-                    Failure(ErrorCode.INVALID_ARGUMENTS, "Invalid URL $url")
-                )
-            }
-        }
+        get("/posts/{url}") { apis.posts.get(call.parameters["url"]!!, call::respond) }
 
         install(StatusPages) {
             exception<Throwable> {
