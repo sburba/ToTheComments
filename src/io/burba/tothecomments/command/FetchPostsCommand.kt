@@ -20,11 +20,11 @@ class FetchPostsCommand(private val metaSource: MetaSource, private val postSour
             throw InvalidUrlException(e)
         }
 
-        val metaDeferred = async { metaSource.metaForUrl(url) }
-        val postDeferreds = postSources.map { source -> async { source.postsForUrl(url) } }
+        val metaAsync = async { metaSource.metaForUrl(url) }
+        val postsAsync = postSources.map { source -> async { source.postsForUrl(url) } }
 
-        val meta = metaDeferred.await()
-        val posts = postDeferreds.awaitAll().flatten()
+        val meta = metaAsync.await()
+        val posts = postsAsync.awaitAll().flatten()
 
         UrlDetails(meta, posts)
     }
