@@ -58,12 +58,6 @@ fun Application.module() {
         mdc("request-id") { UUID.randomUUID().toString() }
     }
 
-    install(CORS) {
-        method(HttpMethod.Options)
-        method(HttpMethod.Get)
-        anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
-    }
-
     routing {
         get("/posts/{url}") { apis.posts.get(call.parameters["url"]!!, call::respond) }
 
