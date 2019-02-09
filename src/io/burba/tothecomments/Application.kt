@@ -1,6 +1,7 @@
 package io.burba.tothecomments
 
 import com.ryanharter.ktor.moshi.moshi
+import io.burba.tothecomments.command.InvalidUrlException
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -67,7 +68,14 @@ fun Application.module() {
 
     routing {
         get<Posts> {
-            call.respond(commands.fetchPosts.run(it.url))
+            try {
+                call.respond(commands.fetchPosts.run(it.url))
+            } catch (e: InvalidUrlException) {
+                call.respond(
+                    HttpStatusCode.BadRequest,
+                    Failure(ErrorCode.INVALID_ARGUMENTS, "Invalid URL ${it.url}")
+                )
+            }
         }
 
         install(StatusPages) {
