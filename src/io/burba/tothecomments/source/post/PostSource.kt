@@ -1,6 +1,6 @@
 package io.burba.tothecomments.source.post
 
-import io.burba.tothecomments.Post
+import io.burba.tothecomments.http.Post
 import io.burba.tothecomments.source.FetchException
 import java.net.URL
 

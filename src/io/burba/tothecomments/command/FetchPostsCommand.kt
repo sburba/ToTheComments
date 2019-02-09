@@ -1,6 +1,6 @@
 package io.burba.tothecomments.command
 
-import io.burba.tothecomments.UrlDetails
+import io.burba.tothecomments.http.UrlDetails
 import io.burba.tothecomments.source.meta.MetaSource
 import io.burba.tothecomments.source.post.PostSource
 import io.burba.tothecomments.util.coerceToUrl

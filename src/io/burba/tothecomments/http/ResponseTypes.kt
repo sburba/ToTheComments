@@ -1,4 +1,4 @@
-package io.burba.tothecomments
+package io.burba.tothecomments.http
 
 enum class ErrorCode {
     INVALID_ARGUMENTS,

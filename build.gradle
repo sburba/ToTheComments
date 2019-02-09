@@ -16,7 +16,7 @@ apply plugin: 'application'
 
 group 'tothecomments'
 version '0.0.1'
-mainClassName = "io.burba.tothecomments.ApplicationKt"
+mainClassName = "io.burba.tothecomments.http.ApplicationKt"
 
 shadowJar {
     baseName = 'tothecomments'

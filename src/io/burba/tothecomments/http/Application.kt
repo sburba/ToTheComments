@@ -1,6 +1,8 @@
-package io.burba.tothecomments
+package io.burba.tothecomments.http
 
 import com.ryanharter.ktor.moshi.moshi
+import io.burba.tothecomments.Config
+import io.burba.tothecomments.DI
 import io.burba.tothecomments.command.InvalidUrlException
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -17,20 +19,18 @@ import io.ktor.features.gzip
 import io.ktor.features.minimumSize
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Locations
-import io.ktor.locations.get
 import io.ktor.response.respond
+import io.ktor.routing.get
 import io.ktor.routing.routing
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import org.slf4j.event.Level
+import java.util.UUID
 
 val config = Config()
 val deps = DI(config)
 val commands = deps.commands
 
-@KtorExperimentalLocationsAPI
 fun main() {
     embeddedServer(
         Netty,
@@ -40,9 +40,7 @@ fun main() {
     ).start(true)
 }
 
-@KtorExperimentalLocationsAPI
 fun Application.module() {
-    install(Locations)
     install(Compression) {
         gzip {
             priority = 1.0
@@ -54,11 +52,12 @@ fun Application.module() {
     }
 
     install(AutoHeadResponse)
-    install(ContentNegotiation) {
-        moshi(deps.moshi)
-    }
+    install(ContentNegotiation) { moshi(deps.moshi) }
 
-    install(CallLogging) { level = Level.INFO }
+    install(CallLogging) {
+        level = Level.INFO
+        mdc("request-id") { UUID.randomUUID().toString() }
+    }
 
     install(CORS) {
         method(HttpMethod.Options)
@@ -67,13 +66,15 @@ fun Application.module() {
     }
 
     routing {
-        get<Posts> {
+        get("/posts/{url}") {
+            // "url" is guaranteed to be there, because of the route
+            val url = call.parameters["url"]!!
             try {
-                call.respond(commands.fetchPosts.run(it.url))
+                call.respond(commands.fetchPosts.run(url))
             } catch (e: InvalidUrlException) {
                 call.respond(
                     HttpStatusCode.BadRequest,
-                    Failure(ErrorCode.INVALID_ARGUMENTS, "Invalid URL ${it.url}")
+                    Failure(ErrorCode.INVALID_ARGUMENTS, "Invalid URL $url")
                 )
             }
         }
