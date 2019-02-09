@@ -1,6 +1,7 @@
 package io.burba.tothecomments
 
 enum class ErrorCode {
+    INVALID_ARGUMENTS,
     INTERNAL_SERVER_ERROR
 }
 

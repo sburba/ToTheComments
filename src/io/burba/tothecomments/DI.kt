@@ -72,10 +72,9 @@ class DI(private val config: Config) {
     }
 
     private val postSources by lazy(PUBLICATION) { listOf(redditSource, hnSource) }
-    private val metaSources by lazy(PUBLICATION) { listOf(microLinkSource) }
 
     inner class Commands {
-        val fetchPosts by lazy(PUBLICATION) { FetchPostsCommand(metaSources, postSources) }
+        val fetchPosts by lazy(PUBLICATION) { FetchPostsCommand(microLinkSource, postSources) }
     }
 }
 
