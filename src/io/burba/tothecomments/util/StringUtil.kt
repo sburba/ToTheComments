@@ -3,6 +3,7 @@ package io.burba.tothecomments.util
 import java.net.MalformedURLException
 import java.net.URL
 
+@Throws(MalformedURLException::class)
 fun String.coerceToUrl(): URL {
     return try {
         URL(this)
