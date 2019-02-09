@@ -29,13 +29,17 @@ class HttpLoggingInterceptor(private val logger: Logger, private val timeInMilli
         if (response.isSuccessful) {
             logger.info("Successful request", fields(RequestLog(url, tookMs, method)))
         } else {
-            logger.warn("Failed request", fields(FailedRequestLog(
-                url = url,
-                took_ms = tookMs,
-                method = method,
-                requestBody = request.body()?.string() ?: "<empty>",
-                responseBody = response.body()?.string() ?: "<empty>"
-            )))
+            logger.warn(
+                "Failed request", fields(
+                    FailedRequestLog(
+                        url = url,
+                        took_ms = tookMs,
+                        method = method,
+                        requestBody = request.body()?.string() ?: "<empty>",
+                        responseBody = response.body()?.string() ?: "<empty>"
+                    )
+                )
+            )
         }
 
         return response

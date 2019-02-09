@@ -4,7 +4,7 @@ import io.burba.tothecomments.http.Post
 import io.burba.tothecomments.source.FetchException
 import java.net.URL
 
-class HnPostSource(private val hnApi: HnApi): PostSource {
+class HnPostSource(private val hnApi: HnApi) : PostSource {
     override fun postsForUrl(url: URL): List<Post> {
         val response = hnApi.getPosts(url.toString()).execute()
         if (response.isSuccessful) {
