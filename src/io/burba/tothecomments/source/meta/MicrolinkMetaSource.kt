@@ -1,6 +1,6 @@
 package io.burba.tothecomments.source.meta
 
-import io.burba.tothecomments.Meta
+import io.burba.tothecomments.http.Meta
 import io.burba.tothecomments.source.FetchException
 import io.burba.tothecomments.util.toNullIfEmpty
 import java.net.URL

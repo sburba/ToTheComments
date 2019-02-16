@@ -1,6 +1,6 @@
 package io.burba.tothecomments.source.meta
 
-import io.burba.tothecomments.Meta
+import io.burba.tothecomments.http.Meta
 import java.net.URL
 
 interface MetaSource {

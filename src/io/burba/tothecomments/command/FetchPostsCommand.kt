@@ -1,6 +1,6 @@
 package io.burba.tothecomments.command
 
-import io.burba.tothecomments.UrlDetails
+import io.burba.tothecomments.http.UrlDetails
 import io.burba.tothecomments.source.meta.MetaSource
 import io.burba.tothecomments.source.post.PostSource
 import io.burba.tothecomments.util.coerceToUrl
@@ -20,11 +20,11 @@ class FetchPostsCommand(private val metaSource: MetaSource, private val postSour
             throw InvalidUrlException(e)
         }
 
-        val metaDeferred = async { metaSource.metaForUrl(url) }
-        val postDeferreds = postSources.map { source -> async { source.postsForUrl(url) } }
+        val metaAsync = async { metaSource.metaForUrl(url) }
+        val postsAsync = postSources.map { source -> async { source.postsForUrl(url) } }
 
-        val meta = metaDeferred.await()
-        val posts = postDeferreds.awaitAll().flatten()
+        val meta = metaAsync.await()
+        val posts = postsAsync.awaitAll().flatten()
 
         UrlDetails(meta, posts)
     }
